@@ -1,5 +1,5 @@
 import cv2
-from utils.frame_utils import isolate_faces, readjust_coordinates
+from frame_utils import isolate_faces, readjust_coordinates
 
 xml_path = "haarcascade_frontalface_default.xml"
 detector = cv2.CascadeClassifier(xml_path)
