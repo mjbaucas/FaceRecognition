@@ -37,7 +37,7 @@ model.fit(trainX, trainY)
 # Open Camera 
 ################################################################# 
 xml_path = "haarcascade_frontalface_default.xml"
-detector = cv2.CascadeClassifier(xml_path)
+face_detector = cv2.CascadeClassifier(xml_path)
 
 camera = PiCamera()
 camera.resolution = (640, 480)
