@@ -1,4 +1,6 @@
 import cv2
+import time 
+
 from numpy import load, expand_dims, asarray
 from sklearn.preprocessing import Normalizer, LabelEncoder
 from sklearn.svm import SVC
