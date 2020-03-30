@@ -38,32 +38,7 @@ def extract_face_from_frame(face_detector, frame, face_size=(160,160)):
 		return 0, asarray(img), (x1, x2, y1, y2)
 	return 1, None, None
 
-# Based on tutorial and code from 
-# https://machinelearningmastery.com/how-to-develop-a-face-recognition-system-using-facenet-in-keras-and-an-svm-classifier/
-def extract_face_from_img(filename, face_size=(160,160)):
-	from mtcnn.mtcnn import MTCNN
-	
-	# Pre-process image
-	img = Image.open(filename)
-	img = img.convert('RGB')
-	img_arr = asarray(img)
 
-	# Detect face
-	face_detector = MTCNN()
-	face_coord = face_detector.detect_faces(img_arr)
-	x1, y1, width, height = face_coord[0]['box']
-	
-	# Adjust coordinates
-	x1 = abs(x1)
-	x2 = x1 + width
-	y1 = abs(y1)
-	y2 = x2 + height
-
-	# Get face coordinates
-	face = img_arr[y1:y2, x1:x2]
-	img = Image.fromarray(face)
-	img = img.resize(face_size)
-	return asarray(img)
 
 def load_faces(directory):
 	faces = []

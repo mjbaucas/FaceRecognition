@@ -3,7 +3,7 @@ from numpy import load, expand_dims, asarray
 from sklearn.preprocessing import Normalizer, LabelEncoder
 from sklearn.svm import SVC
 from random import choice
-from frame_utils import extract_face_from_img, get_embedding, extract_face_from_frame, readjust_coordinates
+from frame_utils import get_embedding, extract_face_from_frame, readjust_coordinates
 from keras.models import load_model
 
 #################################################################

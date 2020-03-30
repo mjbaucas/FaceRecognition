@@ -3,7 +3,8 @@ from matplotlib import pyplot
 from sklearn.preprocessing import Normalizer, LabelEncoder
 from sklearn.svm import SVC
 from random import choice
-from frame_utils import extract_face_from_img, get_embedding
+from frame_utils import get_embedding
+from frame_utils_tf import extract_face_from_img
 from keras.models import load_model
 
 #data = load('5-celebrity-faces.npz')
