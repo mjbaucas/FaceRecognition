@@ -1,2 +1,6 @@
 test*.jpeg
 tf_files/
+5-celebrity-faces-dataset
+*.jpg
+__pycache__
+*.pyc

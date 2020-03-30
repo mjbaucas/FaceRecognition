@@ -1,37 +1,97 @@
 import cv2
 
+from os import listdir
+from os.path import isdir
+
+from PIL import Image
+from numpy import asarray, savez_compressed, expand_dims
+from mtcnn.mtcnn import MTCNN
+
 def readjust_coordinates(x,y,w,h):
-	w_rm = int(0.1 * w/2)
-		
-	x1 = x + w_rm
-	x2 = x + w - w_rm
-	y1 = y
-	y2 = y + h	
+	x1 = abs(x)
+	x2 = x1 + w
+	y1 = abs(y)
+	y2 = x2 + h
 	
 	return x1, y1, x2, y2
 		
-def crop_faces(frame, coordinates):
-	faces = []
-	
-	for (x, y, w, h) in coordinates:
-		x1, y1, x2, y2 = readjust_coordinates(x, y, w, h)
-		faces.append(frame[y1: y2, x1: x2])
+def extract_face_from_frame(face_detector, frame, face_size=(160,160)):
+	# Detect face
+	face_coord = face_detector.detectMultiScale(
+		frame,
+		scaleFactor = 1.2,
+		minNeighbors = 4,
+		minSize = (int(30), int(30)) 	
+	)
+	if len(face_coord) > 0:
+		x1, y1, width, height = face_coord[0]
+		
+		# Adjust coordinates
+		x1 = abs(x1)
+		x2 = x1 + width
+		y1 = abs(y1)
+		y2 = y1 + height
 
+		# Get face coordinates
+		face = frame[y1:y2, x1:x2]
+		img = Image.fromarray(face)
+		img = img.resize(face_size)
+		return 0, asarray(img), (x1, x2, y1, y2)
+	return 1, None, None
+
+# Based on tutorial and code from 
+# https://machinelearningmastery.com/how-to-develop-a-face-recognition-system-using-facenet-in-keras-and-an-svm-classifier/
+def extract_face_from_img(filename, face_size=(160,160)):
+	# Pre-process image
+	img = Image.open(filename)
+	img = img.convert('RGB')
+	img_arr = asarray(img)
+
+	# Detect face
+	face_detector = MTCNN()
+	face_coord = face_detector.detect_faces(img_arr)
+	x1, y1, width, height = face_coord[0]['box']
+	
+	# Adjust coordinates
+	x1 = abs(x1)
+	x2 = x1 + width
+	y1 = abs(y1)
+	y2 = x2 + height
+
+	# Get face coordinates
+	face = img_arr[y1:y2, x1:x2]
+	img = Image.fromarray(face)
+	img = img.resize(face_size)
+	return asarray(img)
+
+def load_faces(directory):
+	faces = []
+	for filename in listdir(directory):
+		path = directory + filename
+		face = extract_face_from_img(path)
+		faces.append(face)
 	return faces
 
-def resize_faces(faces, size=(128,128)):
-	normalized = []
-	for face in faces:
-		if face.shape < size:
-			face_norm = cv2.resize(face, size, interpolation=cv2.INTER_AREA)
-		else:
-			face_norm = cv2.resize(face, size, interpolation=cv2.INTER_CUBIC)
-		normalized.append(face_norm)
+def load_dataset(directory):
+	x = []
+	y = []
 
-	return normalized
+	for subdirectory in listdir(directory):
+		path = directory + subdirectory + '/'
+		if not isdir(path):
+			continue
 
-def isolate_faces(frame, coordinates):
-	cropped_faces = crop_faces(frame, coordinates)
-	resized_faces = resize_faces(cropped_faces)
+		faces = load_faces(path)
+		labels = [subdirectory for i in range(len(faces))]
+		x.extend(faces)
+		y.extend(labels)
+	return asarray(x), asarray(y)
 
-	return resized_faces
+def get_embedding(model, face_arr):
+	face_arr = face_arr.astype('float32')
+	mean = face_arr.mean()
+	std = face_arr.std()
+	face_arr = (face_arr - mean)/std
+	face_samples = expand_dims(face_arr, axis=0)
+	prediction = model.predict(face_samples)
+	return prediction
