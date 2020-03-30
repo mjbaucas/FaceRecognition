@@ -5,7 +5,6 @@ from os.path import isdir
 
 from PIL import Image
 from numpy import asarray, savez_compressed, expand_dims
-from mtcnn.mtcnn import MTCNN
 
 def readjust_coordinates(x,y,w,h):
 	x1 = abs(x)
@@ -42,6 +41,8 @@ def extract_face_from_frame(face_detector, frame, face_size=(160,160)):
 # Based on tutorial and code from 
 # https://machinelearningmastery.com/how-to-develop-a-face-recognition-system-using-facenet-in-keras-and-an-svm-classifier/
 def extract_face_from_img(filename, face_size=(160,160)):
+	from mtcnn.mtcnn import MTCNN
+	
 	# Pre-process image
 	img = Image.open(filename)
 	img = img.convert('RGB')
