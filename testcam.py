@@ -85,7 +85,7 @@ for capture in camera.capture_continuous(capture, format="bgr", use_video_port=T
 	cv2.imshow('Video', frame)
 	key = cv2.waitKey(1) & 0xFF
 	
-	#capture.truncate(0)
+	capture.truncate(0)
 	# Exit
 	if key == ord('q'):
 		break
