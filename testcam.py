@@ -6,6 +6,9 @@ from random import choice
 from frame_utils import get_embedding, extract_face_from_frame, readjust_coordinates
 from keras.models import load_model
 
+from picamera.array import PiRGBArray
+from picamera import PiCamera
+
 #################################################################
 # Pre-load Model 
 ################################################################# 
