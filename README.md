@@ -8,8 +8,8 @@ Facial Recognition implementation using Tensorflow and OpenCV2 on RaspberryPi4 (
 4. On the terminal, run 'pip install -r requirements.txt'.
 
 ## Running
-1a. If you want to run through the Pi, run 'testcam.py' on the terminal
-1b. If you want to run it through Windows 10, run 'testcam_tx2.py' (note that doing this would require other libraries and applications that are not documented here)
+1. If you want to run through the Pi, run 'testcam.py' on the terminal
+2. If you want to run it through Windows 10, run 'testcam_tx2.py' (note that doing this would require other libraries and applications that are not documented here)
 
 ## Training
 1. To add a data entry to the model, download the dataset prepared by [Dan Becker](https://www.linkedin.com/in/dansbecker/) [here](https://www.kaggle.com/dansbecker/5-celebrity-faces-dataset). (You will need to make an account to download)
