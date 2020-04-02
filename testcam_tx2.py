@@ -1,10 +1,13 @@
 import cv2
+import time
+
 from numpy import load, expand_dims, asarray
 from sklearn.preprocessing import Normalizer, LabelEncoder
 from sklearn.svm import SVC
 from random import choice
 from frame_utils import get_embedding, extract_face_from_frame, readjust_coordinates
 from keras.models import load_model
+
 
 #################################################################
 # Pre-load Model 
@@ -49,7 +52,12 @@ rec_color = (0, 255, 0)
 # Detection and Classification Loop
 #################################################################
 predicted_name = "Stranger"
- 
+frame_count = 0
+start_time = time.time()
+sum_acc = 0
+correct_count = 0
+det_count = 0
+
 while True:
 	__, frame = capture.read()
 	frame = cv2.resize(frame, (640, 480)) 
@@ -68,6 +76,11 @@ while True:
 		class_probability = yhat_prob[0,class_index] * 100
 		predicted_name = encode_out.inverse_transform(yhat_class)[0]
 		#print('Predicted: %s (%.3f)' % (predict_names[0], class_probability))
+		
+		if predicted_name == 'marc_baucas':
+			sum_acc+=class_probability
+			correct_count+=1
+		det_count+=1
 
 		# Draw
 		cv2.rectangle(frame, (x1, y1), (x2, y2), rec_color, 2)
@@ -78,12 +91,17 @@ while True:
 
 	cv2.imshow('Video', frame)
 	key = cv2.waitKey(1) & 0xFF
-	
+	frame_count+=1
 	#capture.truncate(0)
 	# Exit
 	if key == ord('q'):
 		break
 
 # Release webcam handle
+end_time = time.time()
+elapsed_time = end_time - start_time
+print("Frames %d - Time %d" % (frame_count, elapsed_time))
+print("Average Classifier Confidence %.3f" % (sum_acc/det_count))
+print("Actual Precision %.3f" % ((correct_count/det_count)*100))
 capture.release()
 cv2.destroyAllWindows()
