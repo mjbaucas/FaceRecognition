@@ -38,31 +38,6 @@ def extract_face_from_frame(face_detector, frame, face_size=(160,160)):
 		return 0, asarray(img), (x1, x2, y1, y2)
 	return 1, None, None
 
-
-
-def load_faces(directory):
-	faces = []
-	for filename in listdir(directory):
-		path = directory + filename
-		face = extract_face_from_img(path)
-		faces.append(face)
-	return faces
-
-def load_dataset(directory):
-	x = []
-	y = []
-
-	for subdirectory in listdir(directory):
-		path = directory + subdirectory + '/'
-		if not isdir(path):
-			continue
-
-		faces = load_faces(path)
-		labels = [subdirectory for i in range(len(faces))]
-		x.extend(faces)
-		y.extend(labels)
-	return asarray(x), asarray(y)
-
 def get_embedding(model, face_arr):
 	face_arr = face_arr.astype('float32')
 	mean = face_arr.mean()

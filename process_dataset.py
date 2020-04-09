@@ -1,4 +1,5 @@
-from frame_utils import load_dataset, get_embedding
+from frame_utils import get_embedding
+from frame_utils_tf import load_dataset
 from keras.models import load_model
 from numpy import asarray, savez_compressed
 
