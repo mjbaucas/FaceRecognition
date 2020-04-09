@@ -1,4 +1,7 @@
 from mtcnn.mtcnn import MTCNN
+from os import listdir
+from os.path import isdir
+
 from PIL import Image
 from numpy import asarray
 
